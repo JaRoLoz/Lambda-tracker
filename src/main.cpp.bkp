@@ -1,0 +1,82 @@
+class OOTX
+{
+public:
+    OOTX() : m_accumulator(m_bitStack), m_payload(m_payloadBits) {}
+    void AppendDataBit(bool bit)
+    {
+        this->m_accumulator.push_back(bit);
+
+        switch (this->m_accumulator.size())
+        {
+        case 17: // preamble check (16 bits + 1 sync bit)
+            for (size_t i = 0; i < 17 /*preamble sequence length in bits*/; i++)
+            {
+                if (PREAMBLE_SEQUENCE[i] == this->m_accumulator.at(i))
+                    continue;
+                this->m_accumulator.clear();
+            }
+            break;
+        case 34:                                    // payload size (16 bits + 1 sync bit)
+            if (this->m_accumulator.at(34) != true) // check for sync bit
+            {
+                this->m_accumulator.clear();
+                return;
+            }
+            for (size_t i = 17; i < 33; i++) // payload size bits (33 bits + 1 sync bit)
+            {
+                this->m_payloadSize = (this->m_payloadSize << 1) | this->m_accumulator.at(i); // convert from bool[] to uint16_t
+            }
+            if (m_payloadSize != 33) // in case an unknown ootx frame is sent
+            {
+                this->m_accumulator.clear();
+                return;
+            }
+            break;
+        default:
+            if (this->m_accumulator.size() == ((this->m_payloadSize * 8) + 8 + 17 + 34)) // 33 payload bytes + 1 padding byte (full payload) + 17 sync bits
+            {
+                // copy all data bits to m_payload
+                for (size_t i = 33; i < 322; i++) // 264 data bits + 1 padding byte (8 bits) + 17 sync bits + 34 previous bits
+                    this->m_payload.at(i - 33) = this->m_accumulator.at(i);
+                    
+                // remove sync bits
+                for (size_t i = 1; i <= 17; i++) // 17 sync bits
+                    this->m_payload.remove(i);
+                
+                // remove padding byte
+                for (size_t i = this->m_payload.size(); this->m_payload.size() - i < 8; i--) // last 8 bits of the payload
+                    this->m_payload.remove(i);
+            }
+        }
+    }
+
+private:
+    bool m_bitStack[400];
+    bool m_payloadBits[323];
+    Vector<bool> m_accumulator;
+    Vector<bool> m_payload;
+
+    uint16_t m_payloadSize;
+
+    bool m_firmwareByte[16];
+    bool m_idByte[32];
+    bool m_phase0Byte[16];
+    bool m_phase1Byte[16];
+    bool m_tilt0Byte[16];
+    bool m_tilt1Byte[16];
+    bool m_unlockcountByte[8];
+    bool m_hwversionByte[8];
+    bool m_curve0Byte[16];
+    bool m_curve1Byte[16];
+    bool m_accelxByte[8];
+    bool m_accelyByte[8];
+    bool m_accelzByte[8];
+    bool m_gibphase0Byte[16];
+    bool m_gibphase1Byte[16];
+    bool m_gibmag0Byte[16];
+    bool m_gibmag1Byte[16];
+    bool m_currentmodeByte[8];
+    bool m_sysfaultByte[8];
+
+    void* (*m_ootxCallback);
+};
