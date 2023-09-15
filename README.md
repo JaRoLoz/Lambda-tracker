@@ -2,7 +2,7 @@
 STM32 implementation of valve's 1.0 basestation tracking system.
 
 # Building
-The project uses [https://platformio.org/](PlatformIO). Install the [https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide](vscode plugin) and hit the build button.
+The project uses [PlatformIO](https://platformio.org/). Install the [vscode plugin](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and hit the build button.
 
 # Sources
 - https://github.com/ashtuchkin/vive-diy-position-sensor
