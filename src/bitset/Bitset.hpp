@@ -13,13 +13,14 @@ template <size_t Size>
 class bitset
 {
 public:
-    bitset(Endian endian) : m_endian(endian) {}
+    bitset(Endian endian = Endian::LittleEndian) : m_endian(endian) {}
     bitset(Endian endian, std::initializer_list<bool> initialBuffer);
     bitset(Endian endian, String initialBuffer);
 
     String toString(Endian requestedEndian);
     template <typename T>
     T getAs();
+    void setEndian(Endian requestedEndian);
     void push(bool bit);
     bool at(size_t pos);
     void set(size_t position, bool value);

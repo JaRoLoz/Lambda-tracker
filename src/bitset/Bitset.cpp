@@ -67,6 +67,20 @@ T bitset<Size>::getAs()
 }
 
 template <size_t Size>
+void bitset<Size>::setEndian(Endian requestedEndian)
+{
+    if (this->m_endian != requestedEndian)
+    {
+        for (size_t i = 0; i < this->m_bufferSize / 2; i++)
+        {
+            bool temp = this->m_buffer[i];
+            this->m_buffer[i] = this->m_buffer[this->m_bufferSize - i - 1];
+            this->m_buffer[this->m_bufferSize - i - 1] = temp;
+        }
+    }
+}
+
+template <size_t Size>
 void bitset<Size>::push(bool bit)
 {
     if ((this->m_bufferIndex + 1) == this->m_bufferSize)
