@@ -22,7 +22,6 @@ public:
     T getAs();
     void push(bool bit);
     bool at(unsigned int pos);
-    String slice(unsigned int startPos, unsigned int endPos);
     void clear();
 
 protected:
