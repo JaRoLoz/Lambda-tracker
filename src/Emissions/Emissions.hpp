@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 
-typedef enum LightEmmisions
+enum LightEmmisions
 {
     J0,
     K0,
