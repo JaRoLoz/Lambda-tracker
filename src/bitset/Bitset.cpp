@@ -76,11 +76,15 @@ void bitset<Size>::push(bool bit)
 }
 
 template <size_t Size>
-bool bitset<Size>::at(unsigned int pos)
+bool bitset<Size>::at(size_t pos)
 {
-    if (pos > (this->m_bufferSize - 1))
-        return false;
     return this->m_buffer[pos];
+}
+
+template <size_t Size>
+void bitset<Size>::set(size_t position, bool value)
+{
+    this->m_buffer[position] = value;
 }
 
 template <size_t Size>

@@ -21,7 +21,8 @@ public:
     template <typename T>
     T getAs();
     void push(bool bit);
-    bool at(unsigned int pos);
+    bool at(size_t pos);
+    void set(size_t position, bool value);
     void clear();
 
 protected:
